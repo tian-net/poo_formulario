@@ -20,7 +20,6 @@ public class Contact {
    public String getName() {
        return name;
    }
-
    // Permite modificar el nombre del contacto
    public void setName(String name) {
        this.name = name;

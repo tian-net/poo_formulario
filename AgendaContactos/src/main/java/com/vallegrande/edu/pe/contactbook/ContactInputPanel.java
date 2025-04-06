@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+
 // Clase que representa el panel donde se ingresan nuevos contactos
 public class ContactInputPanel extends JPanel {
 
@@ -43,22 +45,38 @@ public class ContactInputPanel extends JPanel {
                String name = txtName.getText();
                String phoneNumber = txtPhoneNumber.getText();
                String email = txtEmail.getText();
+               StringBuilder errores = new StringBuilder();
+
 
                // Verifica que todos los campos estén llenos
-               if (!name.isEmpty() && !phoneNumber.isEmpty() && !email.isEmpty()) {
-                   // Crea un nuevo contacto y lo añade al panel de la lista
-                   ContactListPanel.addContact(new Contact(name, phoneNumber, email));
-                   // Limpia los campos después de agregar
-                   txtName.setText("");
-                   txtPhoneNumber.setText("");
-                   txtEmail.setText("");
-               } else {
-                   // Muestra un mensaje de error si algún campo está vacío
-                   JOptionPane.showMessageDialog(null,
-                           "Por favor ingrese toda la información del contacto",
-                           "Error de validación",
-                           JOptionPane.ERROR_MESSAGE);
+               if (name.isEmpty() || phoneNumber.isEmpty() || email.isEmpty()) {
+                   errores.append("• Todos los campos deben estar llenos.\n");
                }
+
+               if (!validar.validarNombre(name)) {
+                   errores.append("• Nombre inválido: solo letras y espacios.\n");
+               }
+
+               if (!validar.validarTelefono(phoneNumber)) {
+                   errores.append("• Teléfono inválido: solo números y mínimo 9 dígitos.\n");
+               }
+
+               if (!validar.validarCorreo(email)) {
+                   errores.append("• Correo inválido: formato usuario@dominio.com.\n");
+               }
+
+               if (errores.length() > 0) {
+                   JOptionPane.showMessageDialog(null,
+                           errores.toString(),
+                           "Errores de validación",
+                           JOptionPane.ERROR_MESSAGE);
+                   return;
+               }
+
+               ContactListPanel.addContact(new Contact(name, phoneNumber, email));
+               txtName.setText("");
+               txtPhoneNumber.setText("");
+               txtEmail.setText("");
            }
        });
 
